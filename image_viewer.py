@@ -256,7 +256,7 @@ class ImageViewer(QWidget):
                 dh = ey - sy
 
                 # 최소 크기가 임계치보다 큰 경우만 어노테이션 바운딩박스 정보 저장
-                if dw > 128 and dh > 128:
+                if dw > 50 and dh > 50:
                     point_1 = (sx, sy)
                     point_2 = (ex, ey)
 
