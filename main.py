@@ -356,6 +356,6 @@ class MainWindowClass(QMainWindow, form_class):
 # 프로그램 시작(QT application)
 app = QApplication(sys.argv)
 w = MainWindowClass()
-w.setWindowTitle('WeedCroppingManagerNet')
+w.setWindowTitle('Cropping-Tool')
 w.show()
 app.exec_()
