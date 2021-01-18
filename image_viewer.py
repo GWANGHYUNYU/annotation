@@ -69,6 +69,10 @@ class ImageViewer(QWidget):
         self.parent.label_image.setSizePolicy(QSizePolicy.Ignored, QSizePolicy.Ignored)
         self.__connectEvents()
 
+        # Bbox Maximum / Minimum Threshold Value
+        self.bbox_threshold_w = 50
+        self.bbox_threshold_h = 50
+
     def __connectEvents(self):
         # 설정 윈도우 내에서의 마우스 위치 좌표 확인 위함
         self.parent.label_image.setMouseTracking(True)
@@ -256,7 +260,7 @@ class ImageViewer(QWidget):
                 dh = ey - sy
 
                 # 최소 크기가 임계치보다 큰 경우만 어노테이션 바운딩박스 정보 저장
-                if dw > 128 and dh > 128:
+                if dw > self.bbox_threshold_w and dh > self.bbox_threshold_h:
                     point_1 = (sx, sy)
                     point_2 = (ex, ey)
 

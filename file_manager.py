@@ -22,6 +22,9 @@ class FileManager(QWidget):
         self.VALID_FORMAT = ('.BMP', '.GIF', '.JPG', '.JPEG', '.PNG', '.PBM', '.PGM', '.PPM', '.TIFF',
                              '.XBM')  # Image formats supported by Qt
 
+        self.ELE_LIST = ['Head', 'Wire', 'entire']
+        self.n_objects = len(self.ELE_LIST)
+
         # 파일 분석 관련 변수
         self.class_list = []
         self.class_cnt_list = []
@@ -29,21 +32,11 @@ class FileManager(QWidget):
         self.species_cnt_list = []
         self.species_class_index_list = []
 
-        self.species_leaf_cnt_list = []
-        self.species_flower_fruit_cnt_list = []
-        self.species_entire_cnt_list = []
-        self.species_multi_entire_cnt_list = []
-
-        self.class_leaf_cnt_list = []
-        self.class_flower_fruit_cnt_list = []
-        self.class_entire_cnt_list = []
-        self.class_multi_entire_cnt_list = []
+        self.species_ele_cnt_list = [ [] for _ in range(self.n_objects) ]
+        self.class_ele_cnt_list =[ [] for _ in range(self.n_objects) ]
 
         self.total_cnt = 0
-        self.total_leaf_cnt = 0
-        self.total_flower_fruit_cnt = 0
-        self.total_entire_cnt = 0
-        self.total_multi_entire_cnt = 0
+        self.total_ele_cnt_list = [0] * self.n_objects
 
         self.file_folder_analysis_dialog = FileFolderAnalysisDialog(parent=self)
 
@@ -108,21 +101,11 @@ class FileManager(QWidget):
         self.species_cnt_list = []
         self.species_class_index_list = []
 
-        self.species_leaf_cnt_list = []
-        self.species_flower_fruit_cnt_list = []
-        self.species_entire_cnt_list = []
-        self.species_multi_entire_cnt_list = []
-
-        self.class_leaf_cnt_list = []
-        self.class_flower_fruit_cnt_list = []
-        self.class_entire_cnt_list = []
-        self.class_multi_entire_cnt_list = []
+        self.species_ele_cnt_list = [ [] for _ in range(self.n_objects) ]
+        self.class_ele_cnt_list =[ [] for _ in range(self.n_objects) ]
 
         self.total_cnt = 0
-        self.total_leaf_cnt = 0
-        self.total_flower_fruit_cnt = 0
-        self.total_entire_cnt = 0
-        self.total_multi_entire_cnt = 0
+        self.total_ele_cnt_list = [0] * self.n_objects
 
         process_cnt = 0
         # 선택폴더에 대해서 파일 분석 수행
@@ -146,10 +129,8 @@ class FileManager(QWidget):
                         self.class_cnt_list.append(1)
 
                         # 어노테이션 클래스 개수 세기용 리스트 초기화
-                        self.class_leaf_cnt_list.append(0)
-                        self.class_flower_fruit_cnt_list.append(0)
-                        self.class_entire_cnt_list.append(0)
-                        self.class_multi_entire_cnt_list.append(0)
+                        for n in range(self.n_objects):
+                            self.class_ele_cnt_list[n].append(0)
 
                     # 확인된 식물과 정보가 기존리스트에 있으면 해당 식물과 개수 증가
                     else:
@@ -163,10 +144,9 @@ class FileManager(QWidget):
                         self.species_class_index_list.append(self.class_list.index(class_name))
 
                         # 어노테이션 클래스 개수 세기용 리스트 초기화
-                        self.species_leaf_cnt_list.append(0)
-                        self.species_flower_fruit_cnt_list.append(0)
-                        self.species_entire_cnt_list.append(0)
-                        self.species_multi_entire_cnt_list.append(0)
+                        for n in range(self.n_objects):
+                            self.class_ele_cnt_list[n].append(0)
+
                     # 확인된 식물종 정보가 기존리스트에 있으면 해당 식물종 개수 증가
                     else:
                         index_species = self.species_list.index(species_name)
@@ -192,18 +172,11 @@ class FileManager(QWidget):
                             anno_class_name, class_index, xmin, ymin, xmax, ymax = self.parent.annot_manager.get_xml_object_data(obj)
 
                             # 식물종에 대한 어노테이션 클래스별 개수 증가
-                            if anno_class_name == 'leaf':
-                                self.species_leaf_cnt_list[index_species] += 1
-                                self.class_leaf_cnt_list[index_class] += 1
-                            elif anno_class_name == 'flower/fruit':
-                                self.species_flower_fruit_cnt_list[index_species] += 1
-                                self.class_flower_fruit_cnt_list[index_class] += 1
-                            elif anno_class_name == 'entire':
-                                self.species_entire_cnt_list[index_species] += 1
-                                self.class_entire_cnt_list[index_class] += 1
-                            elif anno_class_name == 'multi-entire':
-                                self.species_multi_entire_cnt_list[index_species] += 1
-                                self.class_multi_entire_cnt_list[index_class] += 1
+                            print(anno_class_name)
+                            for i in range(self.n_objects):
+                                if anno_class_name == self.ELE_LIST[i]:
+                                    self.species_ele_cnt_list[i][index_species] += 1
+                                    self.class_ele_cnt_list[i][index_class] += 1
 
                     # ann_path = next(path for path in annotation_paths if 'YOLO_darknet' in path)
                     # if os.path.isfile(ann_path):
@@ -230,10 +203,8 @@ class FileManager(QWidget):
 
         for i in range(0, len(self.class_list)):
             self.total_cnt += self.class_cnt_list[i]
-            self.total_leaf_cnt += self.class_leaf_cnt_list[i]
-            self.total_flower_fruit_cnt += self.class_flower_fruit_cnt_list[i]
-            self.total_entire_cnt += self.class_entire_cnt_list[i]
-            self.total_multi_entire_cnt += self.class_multi_entire_cnt_list[i]
+            for n in range(self.n_objects):
+                self.total_ele_cnt_list[n] += self.class_ele_cnt_list[n][i]
 
         # for i in range(0, len(self.class_list)):
         #     print('- 식물과 : ' + self.class_list[i] + ' 영상 개수 : {}'.format(self.class_cnt_list[i]))
@@ -268,10 +239,8 @@ class FileManager(QWidget):
             xl_sheet.cell(xl_row_cnt, 1, '식물과')
             xl_sheet.cell(xl_row_cnt, 2, '식물종')
             xl_sheet.cell(xl_row_cnt, 3, '원본영상')
-            xl_sheet.cell(xl_row_cnt, 4, 'leaf')
-            xl_sheet.cell(xl_row_cnt, 5, 'flower/fruit')
-            xl_sheet.cell(xl_row_cnt, 6, 'entire')
-            xl_sheet.cell(xl_row_cnt, 7, 'multi-entire')
+            for i in range(self.n_objects):
+                xl_sheet.cell(xl_row_cnt, 4 + i, self.ELE_LIST[i])
 
             xl_row_cnt += 1
 
@@ -279,38 +248,26 @@ class FileManager(QWidget):
                 class_str = str(self.class_list[i])
                 species_str = str(self.class_list[i])
                 species_cnt_str = self.class_cnt_list[i]
-                leaf_cnt_str = self.class_leaf_cnt_list[i]
-                flower_fruit_cnt_str = self.class_flower_fruit_cnt_list[i]
-                entire_cnt_str = self.class_entire_cnt_list[i]
-                multi_entire_cnt_str = self.class_multi_entire_cnt_list[i]
+
+                ele_cnt_str  = [str(self.class_ele_cnt_list[n][i]) for n in range(self.n_objects)]
 
                 # 해당 어노테이션 정보에 대해서 부모 클래스의 어노테이션 디스플레이 테이블에 정보 추가
-                item_list = [class_str, species_str, species_cnt_str, leaf_cnt_str, flower_fruit_cnt_str,
-                             entire_cnt_str,
-                             multi_entire_cnt_str]
+                item_list = [class_str, species_str, species_cnt_str] + ele_cnt_str
 
                 for column in range(len(item_list)):
                     xl_sheet.cell(xl_row_cnt, column + 1, item_list[column])
 
                 xl_row_cnt += 1
 
-            item_list = ['합계', '합계', self.total_cnt, self.total_leaf_cnt,
-                         self.total_flower_fruit_cnt,
-                         self.total_entire_cnt,
-                         self.total_multi_entire_cnt]
+            item_list = ['합계', '합계', self.total_cnt] + self.total_ele_cnt_list
 
             for column in range(len(item_list)):
                 xl_sheet.cell(xl_row_cnt, column + 1, item_list[column])
 
             xl_row_cnt += 1
 
-            xl_sheet.cell(xl_row_cnt, 1, '')
-            xl_sheet.cell(xl_row_cnt, 2, '')
-            xl_sheet.cell(xl_row_cnt, 3, '')
-            xl_sheet.cell(xl_row_cnt, 4, '')
-            xl_sheet.cell(xl_row_cnt, 5, '')
-            xl_sheet.cell(xl_row_cnt, 6, '')
-            xl_sheet.cell(xl_row_cnt, 7, '')
+            for i in range(1, self.n_objects + 4):
+                xl_sheet.cell(xl_row_cnt, i, '')
 
             xl_row_cnt += 1
 
@@ -318,14 +275,10 @@ class FileManager(QWidget):
                 class_str = str(self.class_list[self.species_class_index_list[i]])
                 species_str = str(self.species_list[i])
                 species_cnt_str = self.species_cnt_list[i]
-                leaf_cnt_str = self.species_leaf_cnt_list[i]
-                flower_fruit_cnt_str = self.species_flower_fruit_cnt_list[i]
-                entire_cnt_str = self.species_entire_cnt_list[i]
-                multi_entire_cnt_str = self.species_multi_entire_cnt_list[i]
+                ele_cnt_str  = [str(self.species_ele_cnt_list[n][i]) for n in range(self.n_objects)]
 
                 # 해당 어노테이션 정보에 대해서 부모 클래스의 어노테이션 디스플레이 테이블에 정보 추가
-                item_list = [class_str, species_str, species_cnt_str, leaf_cnt_str, flower_fruit_cnt_str,
-                             entire_cnt_str, multi_entire_cnt_str]
+                item_list = [class_str, species_str, species_cnt_str] + ele_cnt_str
 
                 for column in range(len(item_list)):
                     xl_sheet.cell(xl_row_cnt, column + 1, item_list[column])

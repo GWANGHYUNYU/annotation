@@ -18,8 +18,10 @@ class AnnotationManager(QWidget):
 
         # **** 어노테이션 데이터 관련
         # 어노테이션 클래스 지정 정보
-        self.CLASS_LIST = ['leaf', 'flower/fruit', 'entire', 'multi-entire']
+        # self.CLASS_LIST = ['leaf', 'flower/fruit', 'entire', 'multi-entire']  # 식물 어노테이션
+        self.CLASS_LIST = ['Head', 'Wire', 'entire']                            # 케이블 어노테이션
         self.annotation_formats = {'PASCAL_VOC': '.xml', 'YOLO_darknet': '.txt'}
+        self.n_objects = len(self.CLASS_LIST)
 
         self.flg_mouse_clicked_draw_box = False
         self.flg_mouse_clicked_bbox_selected = False
@@ -43,11 +45,11 @@ class AnnotationManager(QWidget):
             (128, 128, 0), (0, 128, 0), (128, 0, 128), (0, 128, 128), (0, 0, 128)]
         self.class_rgb = np.array(self.class_rgb)
         # 지정 클래스 수가 색상 테이블보다 많은 경우 랜덤으로 색상 추가
-        num_colors_missing = len(self.CLASS_LIST) - len(self.class_rgb)
+        num_colors_missing = self.n_objects - len(self.class_rgb)
         if num_colors_missing > 0:
             more_colors = np.random.randisnt(0, 255 + 1, size=(num_colors_missing, 3))
             self.class_rgb = np.vstack([self.class_rgb, more_colors])
-        self.last_class_index = len(self.CLASS_LIST) - 1
+        self.last_class_index = self.n_objects - 1
 
     ''' 어노테이션 데이터 로드 함수(메인) '''
     # 어노테이션 데이터 처리 함수
@@ -259,10 +261,8 @@ class AnnotationManager(QWidget):
 
     # 어노테이션 바운딩 박스 정보 라벨 업데이트
     def update_label_anno_data(self, annotation_paths):
-        leaf_cnt = 0
-        flower_fruit_cnt = 0
-        entire_cnt = 0
-        multi_entire_cnt = 0
+        # 라벨 부분 하드 코딩 체인지
+        cnt_arrays = [0] * (self.n_objects)
         all_cnt = 0
 
         ann_path = next(path for path in annotation_paths if 'PASCAL_VOC' in path)
@@ -276,20 +276,17 @@ class AnnotationManager(QWidget):
             for obj in object_list:
                 class_name, class_index, xmin, ymin, xmax, ymax = self.get_xml_object_data(obj)
 
-                if class_name == 'leaf':
-                    leaf_cnt += 1
-                elif class_name == 'flower/fruit':
-                    flower_fruit_cnt += 1
-                elif class_name == 'entire':
-                    entire_cnt += 1
-                elif class_name == 'multi-entire':
-                    multi_entire_cnt += 1
+                for i in range(self.n_objects):
+                    if(class_name == self.CLASS_LIST[i]):
+                        cnt_arrays[i] += 1
 
                 all_cnt += 1
 
         base_str = 'Annotation class information'
-        data_str = '( all = {} ) : [ leaf = {} ], [ flower/fruit = {} ], [ entire = {} ], [ multi-entire = {} ]'.format(
-            all_cnt, leaf_cnt, flower_fruit_cnt, entire_cnt, multi_entire_cnt)
+        data_str = "( all = {} )".format(all_cnt)
+        for i in range(self.n_objects):
+            data_str += " [ %s = %d ]"%(self.CLASS_LIST[i], cnt_arrays[i])
+
         final_str = base_str + data_str
         self.parent.label_anno_class_info.setText(final_str)
 
