@@ -100,7 +100,7 @@ class ImageViewer(QWidget):
     # 마우스 휠을 통한 줌(확대/축소) 수행 동작 함수
     def zoom(self):
         # 확대/축소 없는 경우 영상 전체 그대로 출력
-        if self.zoomX is 1:
+        if self.zoomX == 1:
             self.zoom_start_x = 0
             self.zoom_start_y = 0
             self.zoom_end_x = int(self.org_width / self.zoomX)

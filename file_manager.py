@@ -22,7 +22,7 @@ class FileManager(QWidget):
         self.VALID_FORMAT = ('.BMP', '.GIF', '.JPG', '.JPEG', '.PNG', '.PBM', '.PGM', '.PPM', '.TIFF',
                              '.XBM')  # Image formats supported by Qt
 
-        self.ELE_LIST = ['Head', 'Wire', 'entire']
+        self.ELE_LIST = ['원단', '인쇄', ' 정전기', '줄선']  
         self.n_objects = len(self.ELE_LIST)
 
         # 파일 분석 관련 변수
@@ -145,7 +145,7 @@ class FileManager(QWidget):
 
                         # 어노테이션 클래스 개수 세기용 리스트 초기화
                         for n in range(self.n_objects):
-                            self.class_ele_cnt_list[n].append(0)
+                            self.species_ele_cnt_list[n].append(0)
 
                     # 확인된 식물종 정보가 기존리스트에 있으면 해당 식물종 개수 증가
                     else:
@@ -172,7 +172,6 @@ class FileManager(QWidget):
                             anno_class_name, class_index, xmin, ymin, xmax, ymax = self.parent.annot_manager.get_xml_object_data(obj)
 
                             # 식물종에 대한 어노테이션 클래스별 개수 증가
-                            print(anno_class_name)
                             for i in range(self.n_objects):
                                 if anno_class_name == self.ELE_LIST[i]:
                                     self.species_ele_cnt_list[i][index_species] += 1

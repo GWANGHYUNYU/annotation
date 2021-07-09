@@ -19,7 +19,8 @@ class AnnotationManager(QWidget):
         # **** 어노테이션 데이터 관련
         # 어노테이션 클래스 지정 정보
         # self.CLASS_LIST = ['leaf', 'flower/fruit', 'entire', 'multi-entire']  # 식물 어노테이션
-        self.CLASS_LIST = ['Head', 'Wire', 'entire']                            # 케이블 어노테이션
+        # self.CLASS_LIST = ['leaf', 'flower/fruit']                            # 케이블 어노테이션
+        self.CLASS_LIST = ['원단', '인쇄', ' 정전기', '줄선']  
         self.annotation_formats = {'PASCAL_VOC': '.xml', 'YOLO_darknet': '.txt'}
         self.n_objects = len(self.CLASS_LIST)
 
@@ -169,7 +170,10 @@ class AnnotationManager(QWidget):
     # xml 어노테이션 정보 로드
     def get_xml_object_data(self, obj):
         class_name = obj.find('name').text
-        class_index = self.CLASS_LIST.index(class_name)
+        try: # catch error in case the class_name not exist in element list
+            class_index = self.CLASS_LIST.index(class_name)
+        except:
+            return ["", -1, 0, 0, 0, 0]
         bndbox = obj.find('bndbox')
         xmin = int(bndbox.find('xmin').text)
         xmax = int(bndbox.find('xmax').text)
