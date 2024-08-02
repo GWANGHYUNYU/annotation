@@ -17,13 +17,15 @@ This is Annotation Tool for collecting data to deep-learning model.
 
 The first version was made by Dr.Lee Jae-Won at 2019.
 
-After that time, We keep it updating from IE lab in Chonnam National University. 
+After that time, We keep it updating from **IE lab** in Chonnam National University. 
+
+Currently, it is maintained by **AISeed Inc.**.
 
 Pre-View is below:
 
 <!-- Line -->
 
-![github](https://user-images.githubusercontent.com/20642014/102997667-030d0680-4569-11eb-88e4-a4810301b99c.png)
+<!-- ![github](https://user-images.githubusercontent.com/20642014/102997667-030d0680-4569-11eb-88e4-a4810301b99c.png) -->
 
 기능(Function):
 * 파일 탐색기
