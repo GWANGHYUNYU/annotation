@@ -19,7 +19,8 @@ class AnnotationManager(QWidget):
         # **** 어노테이션 데이터 관련
         # 어노테이션 클래스 지정 정보
         # self.CLASS_LIST = ['leaf', 'flower/fruit', 'entire', 'multi-entire']  # 식물 어노테이션
-        self.CLASS_LIST = ['Head', 'Wire', 'entire']                            # 케이블 어노테이션
+        # self.CLASS_LIST = ['정상', '검은별무늬병', '과피얼룩', '가루깍지벌레', '복숭아나방', '잎말이나방', '기타']                            # 케이블 어노테이션
+        self.CLASS_LIST = ["Normal", "Black star disease", "Pericarp spot", "Mealy bug", "Peach moth", "Leafroller", "etc"] 
         self.annotation_formats = {'PASCAL_VOC': '.xml', 'YOLO_darknet': '.txt'}
         self.n_objects = len(self.CLASS_LIST)
 

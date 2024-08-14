@@ -22,7 +22,9 @@ class FileManager(QWidget):
         self.VALID_FORMAT = ('.BMP', '.GIF', '.JPG', '.JPEG', '.PNG', '.PBM', '.PGM', '.PPM', '.TIFF',
                              '.XBM')  # Image formats supported by Qt
 
-        self.ELE_LIST = ['Head', 'Wire', 'entire']
+        # self.ELE_LIST = ['Head', 'Wire', 'entire']
+        # self.ELE_LIST = ["정상", "검은별무늬병", "과피얼룩", "가루깍지벌레", "복숭아나방", "잎말이나방", "기타"]
+        self.ELE_LIST = ["Normal", "Black star disease", "Pericarp spot", "Mealy bug", "Peach moth", "Leafroller", "etc"]
         self.n_objects = len(self.ELE_LIST)
 
         # 파일 분석 관련 변수
